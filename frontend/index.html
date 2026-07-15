@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ArenaFlow AI: Premium AI-powered Smart Stadium Management and Fan Portal for FIFA World Cup 2026 operations, routing, crowd flow, and real-time operations.">
+    <title>ArenaFlow AI | FIFA World Cup 2026 Operations</title>
+    <!-- Inter Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <i class="fa-solid fa-circle-nodes brand-icon"></i>
+                <div class="brand-text">
+                    <h1>ArenaFlow <span class="accent-text">AI</span></h1>
+                    <span class="sub-brand">FIFA 2026 STADIUM OS</span>
+                </div>
+            </div>
+            
+            <nav class="nav-menu">
+                <button class="nav-item active" id="nav-ops" onclick="switchView('ops')">
+                    <i class="fa-solid fa-gauge-high"></i>
+                    <span>Operations Center</span>
+                </button>
+                <button class="nav-item" id="nav-fan" onclick="switchView('fan')">
+                    <i class="fa-solid fa-users"></i>
+                    <span>Fan Experience Portal</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-divider"></div>
+
+            <!-- Accessibility & Options -->
+            <div class="sidebar-section">
+                <h3>ACCESSIBILITY & TRANSLATION</h3>
+                <div class="setting-group">
+                    <label for="lang-select"><i class="fa-solid fa-language"></i> Language</label>
+                    <select id="lang-select" onchange="changeLanguage()">
+                        <option value="en">English</option>
+                        <option value="ta">Tamil (தமிழ்)</option>
+                        <option value="es">Español</option>
+                        <option value="fr">Français</option>
+                    </select>
+                </div>
+                <div class="setting-group checkbox-group">
+                    <input type="checkbox" id="access-mode" onchange="toggleAccessibility()">
+                    <label for="access-mode">
+                        <i class="fa-solid fa-wheelchair"></i>
+                        <span>High-Contrast & Audio Help</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Simulation Controls -->
+            <div class="sidebar-section sim-panel">
+                <h3>STADIUM SIMULATOR</h3>
+                <p class="sim-desc">Simulate live matches and stadium events.</p>
+                <button class="btn btn-secondary btn-full" id="btn-trigger-incident" onclick="triggerRandomIncident()">
+                    <i class="fa-solid fa-triangle-exclamation"></i> Trigger Alert
+                </button>
+                <button class="btn btn-primary btn-full" id="btn-toggle-match" onclick="toggleMatchState()">
+                    <i class="fa-solid fa-play"></i> Start Match Simulation
+                </button>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="status-indicator">
+                    <span class="pulse-dot green"></span>
+                    <span>System Connected (Secure)</span>
+                </div>
+                <span class="version">v1.2.6-Beta</span>
+            </div>
+        </aside>
+
+        <!-- Main Body -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="app-header">
+                <div class="header-left">
+                    <div class="match-badge">
+                        <span class="live-tag"><span class="live-dot"></span> LIVE</span>
+                        <span class="match-teams" id="header-match-teams">Argentina vs France</span>
+                        <span class="match-score" id="header-match-score">2 - 1</span>
+                        <span class="match-time" id="header-match-time">74'</span>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="header-stat">
+                        <i class="fa-solid fa-cloud-sun"></i>
+                        <div>
+                            <span class="stat-label">Weather</span>
+                            <span class="stat-val">24°C, Clear</span>
+                        </div>
+                    </div>
+                    <div class="header-stat">
+                        <i class="fa-solid fa-clock"></i>
+                        <div>
+                            <span class="stat-label">Local Time</span>
+                            <span class="stat-val" id="current-time">17:30:00</span>
+                        </div>
+                    </div>
+                    <div class="user-profile">
+                        <div class="user-avatar">G</div>
+                        <div class="user-info">
+                            <span class="user-name">Gokul A.</span>
+                            <span class="user-role">Stadium Director</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- VIEW: OPERATIONS COMMAND CENTER -->
+            <section id="view-ops" class="content-view active-view">
+                <!-- Overview Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon-wrapper cyan-glow">
+                            <i class="fa-solid fa-ticket"></i>
+                        </div>
+                        <div class="stat-content">
+                            <span class="card-title">Live Attendance</span>
+                            <h2 id="ops-stat-attendance">78,432 / 80,000</h2>
+                            <p class="stat-meta text-green"><i class="fa-solid fa-arrow-trend-up"></i> 98% Capacity reached</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon-wrapper gold-glow">
+                            <i class="fa-solid fa-bell-concierge"></i>
+                        </div>
+                        <div class="stat-content">
+                            <span class="card-title">Active AI Mitigation Cases</span>
+                            <h2 id="ops-stat-incidents" class="text-gold">2 Active</h2>
+                            <p class="stat-meta text-dim">1 High priority, 1 Medium</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon-wrapper green-glow">
+                            <i class="fa-solid fa-leaf"></i>
+                        </div>
+                        <div class="stat-content">
+                            <span class="card-title">Eco & Grid Efficiency</span>
+                            <h2 id="ops-stat-eco">94.8%</h2>
+                            <p class="stat-meta text-green"><i class="fa-solid fa-arrow-trend-down"></i> -12.4% Carbon offset saving</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon-wrapper red-glow">
+                            <i class="fa-solid fa-person-running"></i>
+                        </div>
+                        <div class="stat-content">
+                            <span class="card-title">Avg. Gate Transit Time</span>
+                            <h2 id="ops-stat-gate">4.2 min</h2>
+                            <p class="stat-meta text-yellow"><i class="fa-solid fa-circle-exclamation"></i> Slowdown at Gate B</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Ops Grid Layout -->
+                <div class="ops-main-grid">
+                    <!-- Column 1: Interactive Map -->
+                    <div class="card map-card">
+                        <div class="card-header">
+                            <h2><i class="fa-solid fa-map-location-dot"></i> Live Smart Stadium Heatmap</h2>
+                            <div class="card-actions">
+                                <span class="badge badge-info">Estadio Azteca, Mexico City</span>
+                            </div>
+                        </div>
+                        <div class="card-body map-body">
+                            <!-- SVG Stadium Drawing -->
+                            <div class="stadium-svg-container">
+                                <svg id="stadium-map" viewBox="0 0 600 450" width="100%" height="100%">
+                                    <defs>
+                                        <!-- Gradients -->
+                                        <radialGradient id="pitchGrad" cx="50%" cy="50%" r="50%">
+                                            <stop offset="0%" stop-color="#14532d" />
+                                            <stop offset="100%" stop-color="#166534" />
+                                        </radialGradient>
+                                    </defs>
+                                    
+                                    <!-- Background -->
+                                    <rect width="600" height="450" fill="none" />
+                                    
+                                    <!-- Outer Parking/Transit Area -->
+                                    <rect x="10" y="10" width="580" height="430" rx="30" fill="rgba(30, 41, 59, 0.15)" stroke="rgba(255,255,255,0.05)" stroke-width="2" />
+                                    
+                                    <!-- Parking Lot (Interactive Zone) -->
+                                    <path id="zone-parking" class="map-zone" d="M 20,20 L 120,20 L 120,120 L 20,120 Z" onclick="selectZone('parking')" />
+                                    <text x="70" y="70" class="zone-label">PARKING</text>
+                                    
+                                    <!-- Stadium Outer Ring -->
+                                    <ellipse cx="300" cy="225" rx="220" ry="170" fill="rgba(15, 23, 42, 0.6)" stroke="rgba(255, 255, 255, 0.1)" stroke-width="3" />
+                                    
+                                    <!-- Seating Tiers (Interactive Zones) -->
+                                    <!-- North Stand -->
+                                    <path id="zone-north" class="map-zone density-high" d="M 120,130 Q 300,70 480,130 L 440,170 Q 300,120 160,170 Z" onclick="selectZone('north')" />
+                                    <text x="300" y="110" class="zone-label">NORTH STAND</text>
+                                    
+                                    <!-- South Stand -->
+                                    <path id="zone-south" class="map-zone density-low" d="M 120,320 Q 300,380 480,320 L 440,280 Q 300,330 160,280 Z" onclick="selectZone('south')" />
+                                    <text x="300" y="350" class="zone-label">SOUTH STAND</text>
+                                    
+                                    <!-- West Stand (Gate A Area) -->
+                                    <path id="zone-west" class="map-zone density-med" d="M 110,140 Q 60,225 110,310 L 150,270 Q 110,225 150,180 Z" onclick="selectZone('west')" />
+                                    <text x="110" y="230" class="zone-label">WEST (GATE A)</text>
+                                    
+                                    <!-- East Stand (Gate B Area) -->
+                                    <path id="zone-east" class="map-zone density-danger" d="M 490,140 Q 540,225 490,310 L 450,270 Q 490,225 450,180 Z" onclick="selectZone('east')" />
+                                    <text x="490" y="230" class="zone-label">EAST (GATE B)</text>
+                                    
+                                    <!-- Pitch / Field -->
+                                    <rect x="210" y="155" width="180" height="140" rx="10" fill="url(#pitchGrad)" stroke="#22c55e" stroke-width="2" />
+                                    <!-- Center Circle -->
+                                    <circle cx="300" cy="225" r="30" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" />
+                                    <!-- Penalty Areas -->
+                                    <rect x="210" y="200" width="30" height="50" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" />
+                                    <rect x="360" y="200" width="30" height="50" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" />
+                                    <!-- Center Line -->
+                                    <line x1="300" y1="155" x2="300" y2="295" stroke="rgba(255,255,255,0.6)" stroke-width="2" />
+                                </svg>
+                                
+                                <div class="map-legend">
+                                    <span class="legend-item"><span class="legend-color density-low"></span> Low (0-40%)</span>
+                                    <span class="legend-item"><span class="legend-color density-med"></span> Moderate (40-75%)</span>
+                                    <span class="legend-item"><span class="legend-color density-high"></span> Dense (75-90%)</span>
+                                    <span class="legend-item"><span class="legend-color density-danger pulse"></span> Critical (90%+)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Zone Intel & GenAI Assistant -->
+                    <div class="right-column-grid">
+                        <!-- Zone Info Widget -->
+                        <div class="card info-card" id="zone-details-widget">
+                            <div class="card-header">
+                                <h2><i class="fa-solid fa-chart-line"></i> Zone Intelligence</h2>
+                                <span class="pulse-dot green" id="zone-pulse"></span>
+                            </div>
+                            <div class="card-body">
+                                <div id="zone-details-empty" class="text-center text-dim">
+                                    <i class="fa-solid fa-arrow-pointer" style="font-size: 2.5rem; margin-bottom: 1rem;"></i>
+                                    <p>Select any zone on the stadium map to stream real-time operational intelligence and telemetry.</p>
+                                </div>
+                                <div id="zone-details-content" class="hidden">
+                                    <div class="zone-header-title">
+                                        <h3 id="zd-name" class="accent-text">East Stand (Gate B)</h3>
+                                        <span class="badge badge-danger" id="zd-status">Critical Capacity</span>
+                                    </div>
+                                    <div class="zd-stats">
+                                        <div class="zd-stat-row">
+                                            <span>Current Attendance:</span>
+                                            <strong id="zd-attendance">18,432 fans</strong>
+                                        </div>
+                                        <div class="zd-stat-row">
+                                            <span>Target Capacity:</span>
+                                            <strong id="zd-capacity">18,500 max</strong>
+                                        </div>
+                                        <div class="zd-stat-row">
+                                            <span>Avg. Queue Delay:</span>
+                                            <strong id="zd-queue" class="text-red">9.8 mins</strong>
+                                        </div>
+                                        <div class="zd-stat-row">
+                                            <span>Operational Status:</span>
+                                            <strong id="zd-operator" class="text-green">All Gates Open (8/8)</strong>
+                                        </div>
+                                        <div class="zd-stat-row">
+                                            <span>Grid Efficiency:</span>
+                                            <strong id="zd-energy">91.4% (HVAC Nominal)</strong>
+                                        </div>
+                                    </div>
+                                    <div class="zd-ai-analysis">
+                                        <h4><i class="fa-solid fa-microchip"></i> GenAI Analysis & Dispatch Guidance</h4>
+                                        <p id="zd-ai-text">AI predicts Gate B delays will reach 15 minutes as France vs Argentina approaches final whistle. Recommend dynamic route redirecting to West Gate A.</p>
+                                        <button class="btn btn-sm btn-primary" onclick="generateDispatachPlan()">
+                                            <i class="fa-solid fa-paper-plane"></i> Deploy Rerouting Protocol
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- GenAI Operations Assistant -->
+                        <div class="card copilot-card">
+                            <div class="card-header">
+                                <h2><i class="fa-solid fa-robot text-gold"></i> FIFA Operations AI Copilot</h2>
+                                <span class="badge badge-gold">Gemini 3.5 Active</span>
+                            </div>
+                            <div class="card-body chat-body" id="ops-chat-container">
+                                <div class="chat-message ai">
+                                    <div class="avatar"><i class="fa-solid fa-robot"></i></div>
+                                    <div class="msg-content">
+                                        <span class="msg-sender">FIFA Ops CoPilot</span>
+                                        <p>Greetings, Director Gokul. I am monitoring stadium logistics, energy efficiency, crowd bottlenecks, and real-time security telemetry. Ask me anything, or run operations commands below.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="chat-quick-actions">
+                                <button onclick="quickOpsQuestion('Show Gate B crowd control plan')">Crowd Plan</button>
+                                <button onclick="quickOpsQuestion('Analyze energy saving footprint')">Eco Status</button>
+                                <button onclick="quickOpsQuestion('Emergency evacuation routes')">Evac Routes</button>
+                            </div>
+                            <div class="card-footer chat-input-bar">
+                                <input type="text" id="ops-chat-input" placeholder="Ask AI Copilot for decisions or operational reports..." onkeydown="if(event.key === 'Enter') sendOpsMessage()">
+                                <button class="btn btn-primary btn-icon" onclick="sendOpsMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Panel: Incident Management Log -->
+                <div class="card logs-card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-list-check"></i> Real-time Incident & Operational Log</h2>
+                        <div class="card-actions">
+                            <button class="btn btn-sm btn-secondary" onclick="clearResolvedIncidents()"><i class="fa-solid fa-check-double"></i> Archive Resolved</button>
+                        </div>
+                    </div>
+                    <div class="card-body overflow-x">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Incident ID</th>
+                                    <th>Zone</th>
+                                    <th>Priority</th>
+                                    <th>Description</th>
+                                    <th>AI Recommended Action</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="incident-log-body">
+                                <tr id="incident-1" class="incident-row row-danger">
+                                    <td>#INC-982</td>
+                                    <td>East Stand (Gate B)</td>
+                                    <td><span class="badge badge-danger">CRITICAL</span></td>
+                                    <td>Queue wait time exceeded 9 minutes. Potential bottle-necking.</td>
+                                    <td>Deploy fan-rerouting guides to Gate A; update Live Fan app alerts.</td>
+                                    <td><span class="status-tag pulse-tag">Under Mitigation</span></td>
+                                    <td><button class="btn btn-sm btn-primary" onclick="resolveIncident(1)">Apply AI Mitigation</button></td>
+                                </tr>
+                                <tr id="incident-2" class="incident-row row-warning">
+                                    <td>#INC-980</td>
+                                    <td>Parking Lot North</td>
+                                    <td><span class="badge badge-warning">MEDIUM</span></td>
+                                    <td>Shuttle bus charging hub grid surcharge warning.</td>
+                                    <td>Shed HVAC cooling in Parking support rooms; route excess solar reserve.</td>
+                                    <td><span class="status-tag pulse-tag">Under Mitigation</span></td>
+                                    <td><button class="btn btn-sm btn-primary" onclick="resolveIncident(2)">Apply AI Mitigation</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW: FAN EXPERIENCE PORTAL -->
+            <section id="view-fan" class="content-view">
+                <div class="fan-header-intro">
+                    <h2>Welcome to Estadio Azteca Fan Companion</h2>
+                    <p>Powered by Generative AI to guide your transit, seating navigation, sustainability contribution, and immediate help.</p>
+                </div>
+
+                <div class="fan-grid-layout">
+                    <!-- Left: Wayfinding and Stadium Map Guide -->
+                    <div class="card fan-left-card">
+                        <div class="card-header">
+                            <h2><i class="fa-solid fa-compass"></i> Interactive Wayfinder & Seat Navigator</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="wayfinder-input-section">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="fan-gate">Nearest Gate Entrance</label>
+                                        <select id="fan-gate">
+                                            <option value="Gate A">Gate A (West)</option>
+                                            <option value="Gate B">Gate B (East)</option>
+                                            <option value="Gate C">Gate C (North)</option>
+                                            <option value="Gate D">Gate D (South)</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="fan-seat">Your Seat Number</label>
+                                        <input type="text" id="fan-seat" placeholder="e.g. SEC-102, Row G" value="SEC-102">
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary btn-full" onclick="generateFanRoute()">
+                                    <i class="fa-solid fa-route"></i> Generate Optimal Route
+                                </button>
+                            </div>
+
+                            <div class="wayfinder-result-panel hidden" id="wayfinder-result">
+                                <h3 class="accent-text"><i class="fa-solid fa-map"></i> Recommended Route & Guide</h3>
+                                <div class="route-directions" id="route-directions-content">
+                                    <!-- Injected by JavaScript -->
+                                </div>
+                                <div class="accessibility-note" id="route-accessibility-msg">
+                                    <i class="fa-solid fa-wheelchair"></i> Standard route. Escalators are available.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Multilingual Smart Fan Assistant -->
+                    <div class="card fan-assistant-card">
+                        <div class="card-header">
+                            <h2><i class="fa-solid fa-comment-dots text-cyan"></i> Live Multilingual Smart Assistant</h2>
+                            <span class="badge badge-info">Translating to Tamil/Hindi/Spanish</span>
+                        </div>
+                        <div class="card-body chat-body" id="fan-chat-container">
+                            <div class="chat-message ai">
+                                <div class="avatar"><i class="fa-solid fa-user-tie"></i></div>
+                                <div class="msg-content">
+                                    <span class="msg-sender">AI Concierge</span>
+                                    <p>Hello! I can guide you in Tamil, Spanish, French, or English. How can I help you have a great match day today?</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chat-quick-actions">
+                            <button onclick="quickFanQuestion('Tamil: Sec 102 path control? (என் இருக்கைக்கு வழி?)')">தமிழ் வழி</button>
+                            <button onclick="quickFanQuestion('Where is the nearest wheelchair entrance?')">Wheelchair Gate</button>
+                            <button onclick="quickFanQuestion('How do I take the Metro after the match?')">Metro Transit</button>
+                        </div>
+                        <div class="card-footer chat-input-bar">
+                            <input type="text" id="fan-chat-input" placeholder="Type your query in Tamil, English or Spanish..." onkeydown="if(event.key === 'Enter') sendFanMessage()">
+                            <button class="btn btn-primary btn-icon" onclick="sendFanMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Fan: Sustainability & Transit Cards -->
+                <div class="fan-sub-grid">
+                    <!-- Sustainability Widget -->
+                    <div class="card fan-eco-card">
+                        <div class="card-header">
+                            <h2><i class="fa-solid fa-leaf text-green"></i> Fan Green Footprint Calculator</h2>
+                            <span class="badge badge-green">Eco-Champion</span>
+                        </div>
+                        <div class="card-body">
+                            <p class="eco-desc">Offset your match day footprint and unlock exclusive FIFA World Cup digital collectibles!</p>
+                            <div class="eco-actions">
+                                <div class="eco-option">
+                                    <span>Did you arrive by Metro/Public Transport?</span>
+                                    <button class="btn btn-sm btn-secondary" onclick="addEcoPoints(50, 'Metro Transit')">+50 pts</button>
+                                </div>
+                                <div class="eco-option">
+                                    <span>Used reusable cups/plates?</span>
+                                    <button class="btn btn-sm btn-secondary" onclick="addEcoPoints(30, 'Reusable Cup')">+30 pts</button>
+                                </div>
+                                <div class="eco-option">
+                                    <span>Composted / Recycled food waste?</span>
+                                    <button class="btn btn-sm btn-secondary" onclick="addEcoPoints(20, 'Waste Recycling')">+20 pts</button>
+                                </div>
+                            </div>
+                            <div class="eco-score-board">
+                                <span>Your Eco-Score:</span>
+                                <h3 id="fan-eco-points">0 pts</h3>
+                                <div class="progress-bar">
+                                    <div class="progress-bar-fill" id="fan-eco-progress" style="width: 0%;"></div>
+                                </div>
+                                <span class="eco-status-text" id="fan-eco-badge">Level 1: Novice Fan Eco-Saver</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Live Transit Board -->
+                    <div class="card transit-card">
+                        <div class="card-header">
+                            <h2><i class="fa-solid fa-train"></i> Real-time Transit & Bus departures</h2>
+                            <span class="badge badge-info">Metro Line 1 Active</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="transit-board">
+                                <div class="transit-row">
+                                    <span class="transit-line"><i class="fa-solid fa-train-subway text-cyan"></i> Metro L3 (Northbound)</span>
+                                    <span class="transit-time text-green">Every 3 mins</span>
+                                    <span class="transit-status">Nominal</span>
+                                </div>
+                                <div class="transit-row">
+                                    <span class="transit-line"><i class="fa-solid fa-train-subway text-cyan"></i> Metro L3 (Southbound)</span>
+                                    <span class="transit-time text-yellow">Delay 4 mins</span>
+                                    <span class="transit-status">Gate B Crowded</span>
+                                </div>
+                                <div class="transit-row">
+                                    <span class="transit-line"><i class="fa-solid fa-bus text-gold"></i> Stadium Shuttle Hub</span>
+                                    <span class="transit-time text-green">Every 5 mins</span>
+                                    <span class="transit-status">Active</span>
+                                </div>
+                                <div class="transit-row">
+                                    <span class="transit-line"><i class="fa-solid fa-taxi text-pink"></i> Rideshare Zone East</span>
+                                    <span class="transit-time text-red">High demand</span>
+                                    <span class="transit-status">Wait 18 mins</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Script file -->
+    <script src="app.js"></script>
+</body>
+</html>
